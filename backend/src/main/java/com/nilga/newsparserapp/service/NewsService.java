@@ -4,6 +4,7 @@ import com.nilga.newsparserapp.dto.NewsApiResponse;
 import com.nilga.newsparserapp.repository.NewsRepository;
 import com.nilga.shared.model.News;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,7 +25,10 @@ import java.time.ZoneId;
 @RequiredArgsConstructor
 public class NewsService {
 
+	@Autowired
 	private final NewsRepository newsRepository;
+
+	@Autowired
 	private final ExternalNewsService externalNewsService;
 
 	/**
@@ -33,6 +37,11 @@ public class NewsService {
 	 * @return The saved or updated news article.
 	 */
 	public News saveNews(News news) {
+		Optional<News> existingNews = newsRepository.findByHeadline(news.getHeadline());
+		if (existingNews.isPresent()) {
+			System.out.println("Duplicate is found: " + news.getHeadline());
+			return null;
+		}
 		return newsRepository.save(news);
 	}
 

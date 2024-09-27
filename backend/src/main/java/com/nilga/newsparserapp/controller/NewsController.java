@@ -31,14 +31,21 @@ public class NewsController {
 	}
 
 	/**
-	 * Endpoint to save a news article.
+	 * Saves a news article if it is not a duplicate based on the headline.
+	 * If a duplicate is found (i.e., an article with the same headline already exists),
+	 * the method returns an HTTP 409 Conflict status.
 	 *
-	 * @param news News article to save.
-	 * @return The saved news article.
+	 * @param news The {@link News} object to be saved.
+	 * @return A {@link ResponseEntity} containing the saved news article with an HTTP 200 OK status if successful,
+	 *         or an HTTP 409 Conflict status if a duplicate is detected.
 	 */
 	@PostMapping
-	public News saveNews(@RequestBody News news) {
-		return newsService.saveNews(news);
+	public ResponseEntity<Object> saveNews(@RequestBody News news) {
+		News savedNews = newsService.saveNews(news);
+		if (savedNews == null) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+		}
+		return ResponseEntity.ok(savedNews);
 	}
 
 	/**

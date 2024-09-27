@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository interface for managing News entities.
@@ -21,4 +22,12 @@ public interface NewsRepository extends JpaRepository<News, Long> {
 	 * @return List of news articles within the specified time period.
 	 */
 	List<News> findByPublicationTimeBetween(LocalDateTime start, LocalDateTime end);
+
+	/**
+	 * Finds a news article by its headline.
+	 *
+	 * @param headline The headline of the news article to search for.
+	 * @return An {@link Optional} containing the news article if found, or an empty {@link Optional} if no article with the given headline exists.
+	 */
+	Optional<News> findByHeadline(String headline);
 }
